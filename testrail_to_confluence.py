@@ -123,13 +123,13 @@ def update_confluence_page(page_id, version, title, body_html):
 # ─────────────────────────────────────────────
 # NEW: HELPER FUNCTIONS — only addition
 # ─────────────────────────────────────────────
- 
+  
 def extract_app_id(custom_input):
     """Extract number from 'App ID: 2540445' format."""
     if not custom_input:
         return ""
-    match = re.search(r'App ID:\s*(\S+)', str(custom_input))
-    return match.group(1) if match else ""
+    matches = re.findall(r'\b[25]\d{6}\b', str(custom_input))
+    return ", ".join(matches) if matches else ""
  
 def extract_bug_id(comment):
     """Extract Jira ticket from comment like 'Bug created EL-6014'."""
