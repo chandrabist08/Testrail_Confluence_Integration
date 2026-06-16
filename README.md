@@ -81,25 +81,20 @@ Open `.env` and replace all placeholder values:
 ### Step 1 — Get your TestRail Run ID
 Open the test run in TestRail and check the URL:
 ```
-https://yourcompany.testrail.io/index.php?/runs/view/9054
+https://yourcompany.testrail.io/index.php?/runs/view/1234
                                                        ^^^^
                                                    this is your Run ID
+
 ```
 
-### Step 2 — Get your TestRail Testcases URL
-Open the test suite/folder in TestRail and copy the full URL from your browser:
-```
-https://yourcompany.testrail.io/index.php?/suites/view/7&group_id=54241
-```
-
-### Step 3 — Run the script
+### Step 2 — Run the script
 Open terminal in VS Code and run:
 ```bash
-py testrail_to_confluence.py 1234 "https://yourcompany.testrail.io/index.php?/suites/view/7&group_id=54241"
+py testrail_to_confluence.py 1234
 ```
-Replace `9054` and the URL with your actual values.
+Replace `1234` with your actual values. Actual value means test run ID
 
-### Step 4 — Open the link printed in terminal
+### Step 3 — Open the link printed in terminal
 The script prints the Confluence page URL when done. Open it and attach your TestRail screenshot under section 4.
 
 ---
@@ -122,7 +117,7 @@ The script prints the Confluence page URL when done. Open it and attach your Tes
 
 ## Important Notes
 
-- **`.env` file must never be shared or committed to Git.** Add it to `.gitignore` if using version control.
+- **`.env` file must never be shared or committed to Git.** Add it to `.gitignore`.
 - If a Confluence page with the same name already exists, the script **updates** it instead of creating a duplicate.
 - The Jira ticket ID is auto-detected from the TestRail run name (e.g. `Sprint_26.2.4_EL-5388:...` → extracts `EL-5388`).
 
