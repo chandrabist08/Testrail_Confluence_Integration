@@ -11,7 +11,7 @@ You run the script with a TestRail Run ID
         ↓
 Script fetches all test cases in that run
         ↓
-For each test: pulls result, App ID (from custom_input), Bug ID (from comment)
+For each test: pulls result, App ID (from custom_input if it contains a 7-digit number starting with 2 or 5), Bug ID (from result comment on Failed tests if it contains a Jira-style ticket e.g. EL-6014)
         ↓
 Builds a formatted Confluence page matching your sprint QA template
         ↓
@@ -113,8 +113,8 @@ The script prints the Confluence page URL when done. Open it and manually attach
 | **4. TestRail Run Results** | Link to the run + placeholder for screenshot |
 
 ### Table column details
-- **App ID** — auto-filled from the `Input Data` field on each test case (reads `App ID: XXXXXXX`)
-- **Bug ID** — auto-filled from the result comment on failed tests (reads patterns like `Bug created EL-6014`)
+- **App ID** — auto-filled from the `Input Data` field on each test case. Only populated if the field contains a **7-digit number starting with 2 or 5** (e.g. `2001234` or `5009876`). Multiple matches are comma-separated. Left blank otherwise.
+- **Bug ID** — auto-filled from the result comment on **Failed tests only**. Only populated if the comment contains a **Jira-style ticket ID** (uppercase letters followed by a dash and digits, e.g. `EL-6014`). Left blank for Passed/Blocked/Retest/Untested or if no matching pattern is found.
 - **Result** — color-coded: green = Passed, red = Failed, orange = Blocked, blue = Retest, grey = Untested
 
 ---

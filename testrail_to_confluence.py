@@ -224,8 +224,8 @@ def build_page_html(run, tests, testcases_url):
     safe_run_url       = escape(run_url, quote=True)
     safe_testcases_url = escape(testcases_url, quote=True)
 
-    match     = re.search(r'[A-Z]+-\d+', run_name)
-    jira_id = run.get("refs") or (re.search(r'[A-Z]+-\d+', run_name) or [None])[0]
+    _m      = re.search(r'[A-Z]+-\d+', run_name)
+    jira_id = run.get("refs") or (_m.group(0) if _m else None)
     jira_link = (
         f'<a href="{JIRA_URL}/browse/{jira_id}">{jira_id}</a>'
         if jira_id else "N/A"
