@@ -31,6 +31,7 @@ my-automation/
 ```
 
 ---
+
 ## Dependencies
 | Package | Purpose |
 |---|---|
@@ -38,7 +39,9 @@ my-automation/
 | python-dotenv | Loads credentials from the .env file |
 
 Install all at once:
+```bash
 py -m pip install requests python-dotenv
+```
 
 ## One-Time Setup
 
@@ -47,13 +50,14 @@ py -m pip install requests python-dotenv
 - During install, check **"Add Python to PATH"**
 - Verify: open terminal and run `py --version`
 
-### 2. Install VS Code
+### 2. Install VS Code *(optional but recommended)*
 - Download from https://code.visualstudio.com
 - Install the **Python extension** from the Extensions sidebar
+- You can also use any other terminal or editor you prefer
 
 ### 3. Open project folder in VS Code
 - File → Open Folder → select your `my-automation` folder
-- Terminal → New Terminal
+- Terminal → New Terminal (or use your system terminal)
 
 ### 4. Install dependencies
 ```bash
@@ -92,10 +96,10 @@ Open terminal in VS Code and run:
 ```bash
 py testrail_to_confluence.py 1234
 ```
-Replace `1234` with your actual values. Actual value means test run ID
+Replace `1234` with your actual Run ID.
 
 ### Step 3 — Open the link printed in terminal
-The script prints the Confluence page URL when done. Open it and attach your TestRail screenshot under section 4.
+The script prints the Confluence page URL when done. Open it and manually attach a screenshot of the TestRail run results under **Section 4**.
 
 ---
 

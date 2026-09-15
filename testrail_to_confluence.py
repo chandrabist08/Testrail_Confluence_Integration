@@ -39,9 +39,10 @@ CONFLUENCE_PARENT_PAGE_ID = os.getenv("CONFLUENCE_PARENT_PAGE_ID")
 JIRA_URL                  = os.getenv("JIRA_URL")
 
 # ─────────────────────────────────────────────
-# STATUS MAP
+# STATUS MAP  (built dynamically from TestRail)
 # ─────────────────────────────────────────────
 
+# Fallback defaults in case the API call fails at import time
 STATUS_MAP = {
     1: "Passed",
     2: "Blocked",
@@ -49,6 +50,28 @@ STATUS_MAP = {
     4: "Retest",
     5: "Failed",
 }
+
+def load_status_map():
+    """Fetch all statuses (including custom) from TestRail and populate STATUS_MAP."""
+    global STATUS_MAP
+    try:
+        creds = f"{TESTRAIL_USER}:{TESTRAIL_API_KEY}"
+        headers = {
+            "Authorization": f"Basic {b64encode(creds.encode()).decode()}",
+            "Content-Type": "application/json",
+        }
+        url = f"{TESTRAIL_URL}/index.php?/api/v2/get_statuses"
+        resp = requests.get(url, headers=headers)
+        resp.raise_for_status()
+        statuses = resp.json()
+        # TestRail returns a list of status objects; key is `id`, label is `label`
+        if isinstance(statuses, list):
+            STATUS_MAP = {s["id"]: s["label"] for s in statuses if "id" in s and "label" in s}
+        elif isinstance(statuses, dict) and "statuses" in statuses:
+            STATUS_MAP = {s["id"]: s["label"] for s in statuses["statuses"] if "id" in s and "label" in s}
+        print(f"  ℹ️  Loaded {len(STATUS_MAP)} statuses from TestRail: {STATUS_MAP}")
+    except Exception as e:
+        print(f"  ⚠️  Could not load statuses from TestRail ({e}), using defaults.")
 
 # ─────────────────────────────────────────────
 # TESTRAIL API
@@ -158,17 +181,19 @@ def extract_bug_id(comment):
 def build_table_rows(tests):
     rows_html = ""
     for test in tests:
-        result    = get_results_for_test(test["id"])
-        status_id = result["status_id"] if result else 3
+        # Use the status_id directly from the test object (already set by TestRail)
+        status_id = test.get("status_id") or 3
         status    = STATUS_MAP.get(status_id, "Unknown")
 
         # App ID from custom_input field
         app_id = extract_app_id(test.get("custom_input", ""))
 
-        # Bug ID from comment on failed tests only
+        # Bug ID from comment on failed tests only — fetch result only when needed
         bug_id = ""
-        if result and status == "Failed":
-            bug_id = extract_bug_id(result.get("comment", ""))
+        if status == "Failed":
+            result = get_results_for_test(test["id"])
+            if result:
+                bug_id = extract_bug_id(result.get("comment", ""))
 
         color = {
             "Passed":   "#00875A",
@@ -262,6 +287,7 @@ def build_page_html(run, tests, testcases_url):
 
 def sync_run(run_id):
     print(f"\n── Run {run_id} ──────────────────────────")
+    load_status_map()
     try:
         run   = get_run(run_id)
         title = run.get("name", f"Run {run_id}")
