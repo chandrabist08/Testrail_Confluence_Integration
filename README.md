@@ -26,7 +26,8 @@ Creates the page under your chosen parent folder in Confluence
 ```
 my-automation/
 ├── testrail_to_confluence.py   ← main script
-├── .env                        ← your credentials (never share this)
+├── .env.example                ← template — copy to .env and fill in your values
+├── requirements.txt            ← Python dependencies
 ├── README.md                   ← this file
 ```
 
@@ -38,10 +39,7 @@ my-automation/
 | requests | Makes API calls to TestRail and Confluence |
 | python-dotenv | Loads credentials from the .env file |
 
-Install all at once:
-```bash
-py -m pip install requests python-dotenv
-```
+---
 
 ## One-Time Setup
 
@@ -61,10 +59,14 @@ py -m pip install requests python-dotenv
 
 ### 4. Install dependencies
 ```bash
-py -m pip install requests python-dotenv
+py -m pip install -r requirements.txt
 ```
 
-### 5. Fill in your `.env` file
+### 5. Set up your `.env` file
+Copy the example template and fill in your values:
+```bash
+copy .env.example .env
+```
 Open `.env` and replace all placeholder values:
 
 | Variable | Where to find it |
